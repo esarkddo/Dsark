@@ -1,0 +1,46 @@
+So lets introduce the architecture of Jupyter. So on the left hand side you have of course
+the user, which interacts with a browser and the central component in Jupyter is the notebook
+server. So the notebook server is loading and storing
+the jupyter notebook file and sends the html content to the browser. Once this html content in the browser is rendered
+it interacts with the notebook server using websockets. So its a split application the UI runs in
+the browser using javascript. And the notebook server is responsible for
+keeping state, and the second thing is, it is communicating with a so called kernel. So the kernel is a wrapper, which wraps the
+execution framework , for example the python interpreter. So one problem you might encounter if you
+are running heavy load in jupyter or jupyter lab this is all installed on a single machine,
+either on your laptop on a server machine. Especially for example, if you are using amazon
+sage maker, you have the jupyter notebooks. But, its all restricted to the machine, the
+EC2 instance you have chosen before. And another disadvantage is of course, if
+you are not using the machine you still pay for it. And if its not sufficient then you just either
+need to wait a long time, or its just impossible to run your workload. So you see that here illustrated, we have
+here a single machine and multipe users for example, are running multiple kernels and
+eventually the main memory is exhausted and it just crashes. So BOOM! And the solution to this is the jupyter enterprise
+gateway, which IBM created and which IBM also open sourced which also is now part of the
+official jupyter open source distribution. So the idea is here that, you have a proxy
+and behind the proxy there is a cluster of machines and that proxy decides where to put
+the individual kernels and the kernels are then running on those machines. To get a bit more into detail, its here I’m
+using a architecture diagram, of jupyter enterprise gateway . So you have here, the users on your
+left hand side as usual there are jupyter notebook instances runnign in the browser. So that’s a javascript application and it
+communicates to the server using websockets, then you have jupyter lab and then, the jupyter
+enterprise gateway kicks in. So in contrast jupyter lab talking to a kernel
+it talks to the jupyter enterprise gateway, which acts a proxy. So it basically acts like a kernel but in
+reality it forwards all the calls to a remote kernel, and the remote kernel is running inside
+a Kubernetes POD. So its basically a container and that container
+by Kubernetes can be scheduled on any cluster member. And the cool thing here is that you can now
+just start as many kernels as you like, and Kubernetes takes care of distributing them
+on the cluster. So of course I don’t want to pitch watson
+studio here, but you can see here that in the background, while this notebook has been
+loaded kernel has been initiated on a remote Kubernetes cluster member. And whatever you execute here now goes through
+the jupyter enterprise gateway. I’m just showing watson studio here because
+I don’t have open source installation available which uses the jupyter enterprise gateway. And if you now for example go through this
+project overview, then watson studio asks the jupyter enterprise gateway about the status
+of the different containers, which are encapsulating the kernels. And you see here, I have one active environment. This is this one here, you see here the hardware
+configuration and this is actually running somewhere in the IBM container cloud on Kubernetes. That’s pretty cool and just a final thing,
+I want to show you here is you can specify environments and you can attach environments
+to notebooks. So you can basically choose on how many CPUs
+and how much RAM a particular notebook runs. That’s particularly handy for example, if
+you have ETL task for data integration which uses spark, you just use a spark notebook. And if it’s a heavy task you can increase
+the number of executors. Or you have for example, tensorflow notebook
+which then takes this data and does some training. Then of course you can also increase the number
+of CPUs and main memory. That’s basically all and I hope you have
+learned something about jupyter, jupyter notebooks architecture and if you have questions please
+post them down in the comments section or use the coursera discussion forum. Thanks a lot bye!
